@@ -8,6 +8,7 @@ import {
   Box,
   Hidden,
   IconButton,
+  Typography,
   Toolbar,
   makeStyles
 } from '@material-ui/core';
@@ -42,6 +43,14 @@ const TopBar = ({
         <RouterLink to="/">
           <Logo />
         </RouterLink>
+        <Typography
+          color="#FFFFFF"
+          display="inline"
+          variant="h2"
+          style={{marginLeft: "20px"}}
+        >
+          Udobje doma
+        </Typography>
         <Box flexGrow={1} />
         <Hidden mdDown>
           <RouterLink to="obvestila">
