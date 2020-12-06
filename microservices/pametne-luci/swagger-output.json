@@ -1,0 +1,435 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Pametne luci",
+    "description": "Mikrostoritev za upravljanje pametnih luči"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {},
+  "consumes": [],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [],
+        "description": "Korenska končna točka. Preusmeri na naslov /swagger",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/luci": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki vrača podatke o vseh sobah in njihovih lučeh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SeznamSob"
+            },
+            "description": "Soba z vsemi pripadajočimi lučmi"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/{sobaId}": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki vrača podatke za sobo z Id, ki se pošlje v zahtevi",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Soba z vsemi pripadajočimi lučmi",
+            "schema": {
+              "$ref": "#/definitions/Soba"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "tags": [],
+        "description": "Končna točka, ki doda novo luč v sobo z id, ki je bil poslan z zahtevo.",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v katero želimo dodati luč"
+          },
+          {
+            "name": "posodobljenaLuc",
+            "schema": {
+              "$ref": "#/definitions/Luc"
+            },
+            "description": "Json nove luci",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Luč",
+            "schema": {
+              "$ref": "#/definitions/Luc"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/{sobaId}/{lucId}": {
+      "put": {
+        "tags": [],
+        "description": "Končna točka, ki izbriše luč",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe iz katere želimo izbrisati luč"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki jo želimo izbrisati"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/prizgi/{sobaId}/{lucId}": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki prižge izbrano luč",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v kateri želimo prižgati luč"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki jo želimo prižgati"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/ugasni/{sobaId}/{lucId}": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki ugasne izbrano luč",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v kateri želimo ugasniti luč"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki jo želimo ugasniti"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/slediurniku/{sobaId}/{lucId}": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki vklopi sledenje urniku pri izbrani luči",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v kateri želimo vklopiti sledenje urniku"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki ji želimo vklopiti sledenje urniku"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/neslediurniku/{sobaId}/{lucId}": {
+      "get": {
+        "tags": [],
+        "description": "Končna točka, ki izklopi sledenje urniku pri izbrani luči",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v kateri želimo izklopiti sledenje urniku"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki ji želimo izklopiti sledenje urniku"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Soba": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "5fc0d0252a5e2bde4b6b3d15"
+        },
+        "soba": {
+          "type": "string",
+          "example": "Kuhinja"
+        },
+        "luci": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "lucId": {
+                "type": "string",
+                "example": "5fc0d07a7e6387bddd65459b"
+              },
+              "luc": {
+                "type": "string",
+                "example": "Luc na stropu"
+              },
+              "prizgana": {
+                "type": "boolean",
+                "example": true
+              },
+              "svetlost": {
+                "type": "number",
+                "example": 60
+              },
+              "barva": {
+                "type": "string",
+                "example": "#FFFFFF"
+              },
+              "prizgiOb": {
+                "type": "string",
+                "example": "07:00"
+              },
+              "ugasniOb": {
+                "type": "string",
+                "example": "23:00"
+              },
+              "slediUrniku": {
+                "type": "boolean",
+                "example": false
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "Soba"
+      }
+    },
+    "SeznamSob": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "5fc0d0252a5e2bde4b6b3d15"
+          },
+          "soba": {
+            "type": "string",
+            "example": "Kuhinja"
+          },
+          "luci": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lucId": {
+                  "type": "string",
+                  "example": "5fc0d07a7e6387bddd65459b"
+                },
+                "luc": {
+                  "type": "string",
+                  "example": "Luc na stropu"
+                },
+                "prizgana": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "svetlost": {
+                  "type": "number",
+                  "example": 60
+                },
+                "barva": {
+                  "type": "string",
+                  "example": "#FFFFFF"
+                },
+                "prizgiOb": {
+                  "type": "string",
+                  "example": "07:00"
+                },
+                "ugasniOb": {
+                  "type": "string",
+                  "example": "23:00"
+                },
+                "slediUrniku": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "SeznamSob"
+      }
+    },
+    "Luc": {
+      "type": "object",
+      "properties": {
+        "lucId": {
+          "type": "string",
+          "example": "5fc0d07a7e6387bddd65459b"
+        },
+        "luc": {
+          "type": "string",
+          "example": "Luc na stropu"
+        },
+        "prizgana": {
+          "type": "boolean",
+          "example": true
+        },
+        "svetlost": {
+          "type": "number",
+          "example": 60
+        },
+        "barva": {
+          "type": "string",
+          "example": "#FFFFFF"
+        },
+        "prizgiOb": {
+          "type": "string",
+          "example": "07:00"
+        },
+        "ugasniOb": {
+          "type": "string",
+          "example": "23:00"
+        },
+        "slediUrniku": {
+          "type": "boolean",
+          "example": false
+        }
+      },
+      "xml": {
+        "name": "Luc"
+      }
+    }
+  }
+}
