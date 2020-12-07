@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 import moment from 'moment';
+import { NavLink as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -22,33 +23,27 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 const data = [
   {
     id: uuid(),
-    name: 'Dropbox',
-    imageUrl: '/static/images/products/product_1.png',
+    name: 'Prižgala se je luč',
+    imageUrl: '/static/images/lightbulb.svg',
     updatedAt: moment().subtract(2, 'hours')
   },
   {
     id: uuid(),
-    name: 'Medium Corporation',
-    imageUrl: '/static/images/products/product_2.png',
+    name: 'Izklopili ste sledenje urniku za luč',
+    imageUrl: '/static/images/lightbulb.svg',
     updatedAt: moment().subtract(2, 'hours')
   },
   {
     id: uuid(),
-    name: 'Slack',
-    imageUrl: '/static/images/products/product_3.png',
+    name: 'Predvaja se glasba',
+    imageUrl: '/static/images/speaker.svg',
     updatedAt: moment().subtract(3, 'hours')
   },
   {
     id: uuid(),
-    name: 'Lyft',
-    imageUrl: '/static/images/products/product_4.png',
+    name: 'Vaše pivo je nalito',
+    imageUrl: '/static/images/beer.svg',
     updatedAt: moment().subtract(5, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'GitHub',
-    imageUrl: '/static/images/products/product_5.png',
-    updatedAt: moment().subtract(9, 'hours')
   }
 ];
 
@@ -73,7 +68,7 @@ const LatestProducts = ({ className, ...rest }) => {
     >
       <CardHeader
         subtitle={`${products.length} in total`}
-        title="Latest Products"
+        title="Zadnja obvestila"
       />
       <Divider />
       <List>
@@ -91,7 +86,7 @@ const LatestProducts = ({ className, ...rest }) => {
             </ListItemAvatar>
             <ListItemText
               primary={product.name}
-              secondary={`Updated ${product.updatedAt.fromNow()}`}
+              secondary={`${product.updatedAt.fromNow()}`}
             />
             <IconButton
               edge="end"
@@ -113,8 +108,10 @@ const LatestProducts = ({ className, ...rest }) => {
           endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
+          component={RouterLink}
+          to={'/app/obvestila'}
         >
-          View all
+          Poglej vse
         </Button>
       </Box>
     </Card>

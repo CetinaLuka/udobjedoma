@@ -61,7 +61,8 @@ const Budget = ({ className, steviloLuci, ...rest }) => {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}
-                    src={'/static/images/lightbulb.svg'}>
+              src={'/static/images/lightbulb.svg'}
+            >
             </Avatar>
           </Grid>
         </Grid>
@@ -75,7 +76,7 @@ const Budget = ({ className, steviloLuci, ...rest }) => {
             className={classes.differenceValue}
             variant="body2"
           >
-            
+
           </Typography>
           <Typography
             color="textSecondary"

@@ -37,12 +37,21 @@ class Dashboard extends React.Component {Page
 
   render() {
     var steviloPrizganihLuci = 0;
+    var sobe = [];
+    var luci = [];
+    var luciSobe = [];
     if(this.state.isLuciLoaded){
+      luci = this.state.luci;
       this.state.luci.forEach(soba => {
+        sobe.push(soba.soba);
+        var steviloLuciSoba = 0;
         soba.luci.forEach(luc => {
-          if(luc.prizgana)
+          if(luc.prizgana){
+            steviloLuciSoba++;
             steviloPrizganihLuci++;
+          }
         })
+        luciSobe.push(steviloLuciSoba);
       });
     }
     
@@ -94,21 +103,12 @@ class Dashboard extends React.Component {Page
             </Grid>
             <Grid
               item
-              lg={8}
-              md={12}
-              xl={9}
-              xs={12}
-            >
-              <Sales />
-            </Grid>
-            <Grid
-              item
               lg={4}
               md={6}
               xl={3}
               xs={12}
             >
-              <TrafficByDevice />
+              <TrafficByDevice sobe={sobe} luci={luci} luciSobe={luciSobe}/>
             </Grid>
             <Grid
               item
@@ -118,15 +118,6 @@ class Dashboard extends React.Component {Page
               xs={12}
             >
               <LatestProducts />
-            </Grid>
-            <Grid
-              item
-              lg={8}
-              md={12}
-              xl={9}
-              xs={12}
-            >
-              <LatestOrders />
             </Grid>
           </Grid>
         </Container>

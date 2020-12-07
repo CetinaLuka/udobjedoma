@@ -13,18 +13,18 @@ import {
 } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.green[600],
     height: 56,
     width: 56
   },
   differenceIcon: {
-    color: colors.green[900]
   },
   differenceValue: {
     color: colors.green[900],
@@ -52,18 +52,25 @@ const TotalCustomers = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TOTAL CUSTOMERS
+              ZVOČNIKI
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              1,600
+              Never gonna give you up
+            </Typography>
+            <Typography
+              color="textPrimary"
+              variant="h6"
+            >
+              Rick Astley
             </Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <PeopleIcon />
+            <Avatar className={classes.avatar}
+              src={'/static/images/speaker.svg'}
+              variant="square">
             </Avatar>
           </Grid>
         </Grid>
@@ -72,18 +79,17 @@ const TotalCustomers = ({ className, ...rest }) => {
           display="flex"
           alignItems="center"
         >
-          <ArrowUpwardIcon className={classes.differenceIcon} />
+          <PauseCircleFilledIcon className={classes.differenceIcon} />
           <Typography
             className={classes.differenceValue}
             variant="body2"
           >
-            16%
           </Typography>
           <Typography
             color="textSecondary"
             variant="caption"
           >
-            Since last month
+            Se predvaja
           </Typography>
         </Box>
       </CardContent>

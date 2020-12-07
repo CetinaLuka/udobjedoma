@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.indigo[600],
     height: 56,
     width: 56
   }
@@ -43,18 +42,19 @@ const TotalProfit = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TOTAL PROFIT
+              ŠTEVILO NALITIH VRČKOV PIVA
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              $23,200
+              200
             </Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <AttachMoneyIcon />
+            <Avatar className={classes.avatar}
+              src={'/static/images/beer.svg'}
+              variant="square">
             </Avatar>
           </Grid>
         </Grid>

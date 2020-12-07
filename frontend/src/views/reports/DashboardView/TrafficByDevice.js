@@ -13,9 +13,8 @@ import {
   makeStyles,
   useTheme
 } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import { AlignJustify } from 'react-feather';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,25 +22,28 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TrafficByDevice = ({ className, ...rest }) => {
+const TrafficByDevice = ({ className, sobe, luci, luciSobe, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: luciSobe,
         backgroundColor: [
           colors.indigo[500],
           colors.red[600],
-          colors.orange[600]
+          colors.orange[600],
+          colors.green[500],
+          colors.red[500],
+          colors.grey[500],
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: sobe
   };
 
   const options = {
@@ -65,34 +67,30 @@ const TrafficByDevice = ({ className, ...rest }) => {
       titleFontColor: theme.palette.text.primary
     }
   };
-
-  const devices = [
-    {
-      title: 'Desktop',
-      value: 63,
-      icon: LaptopMacIcon,
-      color: colors.indigo[500]
-    },
-    {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
-      color: colors.red[600]
-    },
-    {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
-      color: colors.orange[600]
+  const sobeItems = [];
+  for (let index = 0; index < luci.length; index++) {
+    var soba = luci[index];
+    var item = {
+      title: soba.soba,
+      color: data.datasets[0].backgroundColor[index],
+      icon: MeetingRoomIcon,
+      value: 0
+    };
+    var steviloPrizganih = 0;
+    for (let j = 0; j < soba.luci.length; j++) {
+      if(soba.luci[j].prizgana)    
+        steviloPrizganih++;  
     }
-  ];
+    item.value = steviloPrizganih;
+    sobeItems.push(item);
+  }
 
   return (
     <Card
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Stevilo prizganih luči po sobah" />
       <Divider />
       <CardContent>
         <Box
@@ -109,7 +107,7 @@ const TrafficByDevice = ({ className, ...rest }) => {
           justifyContent="center"
           mt={2}
         >
-          {devices.map(({
+          {sobeItems.map(({
             color,
             icon: Icon,
             title,
@@ -132,7 +130,6 @@ const TrafficByDevice = ({ className, ...rest }) => {
                 variant="h2"
               >
                 {value}
-                %
               </Typography>
             </Box>
           ))}

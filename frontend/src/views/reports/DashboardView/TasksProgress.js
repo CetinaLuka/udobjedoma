@@ -19,7 +19,6 @@ const useStyles = makeStyles(() => ({
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.orange[600],
     height: 56,
     width: 56
   }
@@ -45,7 +44,7 @@ const TasksProgress = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TASKS PROGRESS
+              KOLIČINA PREOSTALEGA PIVA
             </Typography>
             <Typography
               color="textPrimary"
@@ -55,8 +54,9 @@ const TasksProgress = ({ className, ...rest }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <InsertChartIcon />
+            <Avatar className={classes.avatar}
+            src={'/static/images/beer.svg'}
+            variant="square">
             </Avatar>
           </Grid>
         </Grid>
