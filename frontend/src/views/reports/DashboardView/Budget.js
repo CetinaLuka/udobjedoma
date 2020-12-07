@@ -11,15 +11,13 @@ import {
   colors,
   makeStyles
 } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import MoneyIcon from '@material-ui/icons/Money';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.red[600],
     height: 56,
     width: 56
   },
@@ -32,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Budget = ({ className, ...rest }) => {
+const Budget = ({ className, steviloLuci, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -52,18 +50,18 @@ const Budget = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              BUDGET
+              Prižgane luči
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              $24,000
+              {steviloLuci}
             </Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <MoneyIcon />
+            <Avatar className={classes.avatar}
+                    src={'/static/images/lightbulb.svg'}>
             </Avatar>
           </Grid>
         </Grid>
@@ -72,18 +70,18 @@ const Budget = ({ className, ...rest }) => {
           display="flex"
           alignItems="center"
         >
-          <ArrowDownwardIcon className={classes.differenceIcon} />
+          <PowerSettingsNewIcon className={classes.differenceIcon} />
           <Typography
             className={classes.differenceValue}
             variant="body2"
           >
-            12%
+            
           </Typography>
           <Typography
             color="textSecondary"
             variant="caption"
           >
-            Since last month
+            Izklopite jih, če vas ni doma
           </Typography>
         </Box>
       </CardContent>
@@ -92,7 +90,8 @@ const Budget = ({ className, ...rest }) => {
 };
 
 Budget.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  steviloLuci: PropTypes.string
 };
 
 export default Budget;
