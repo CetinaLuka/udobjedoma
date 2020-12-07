@@ -11,19 +11,18 @@ import Toolbar from './Toolbar';
 import ProductCard from './ProductCard';
 import data from './data';
 import { ViewArray } from '@material-ui/icons';
-
+import endpoints from '../../endpoints';
 
 class LuciView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       luci: [],
-      isLoaded: false,
-      test: ["ena", "dva", "tri"]
+      isLoaded: false
     };
   }
   async componentDidMount() {
-    fetch("http://localhost:3000/luci")
+    fetch(endpoints.luci+"/luci")
       .then(res => res.json())
       .then((result) => {
         var luci = result
@@ -52,18 +51,13 @@ class LuciView extends React.Component {
               <ProductCard
                 product={luc}
                 soba={soba.soba}
+                sobaId={soba._id}
               />
             </Grid>
           ))
         )
       );
     }
-    const test = (
-      this.state.test.map((item) => (
-        <p>{item}</p>
-      )
-      ));
-
 
     return (
       <Page

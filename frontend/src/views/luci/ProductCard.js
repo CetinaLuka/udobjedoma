@@ -14,8 +14,7 @@ import {
   FormControlLabel,
   Switch
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import endpoints from '../../endpoints';
 
 class ProductCard extends React.Component {
   constructor(props) {
@@ -29,15 +28,55 @@ class ProductCard extends React.Component {
   }
   handleChange(){
     const currentState = this.state.checked;
+    if(currentState){
+      this.ugasni()
+    }
+    else{
+      this.prizgi()
+    }
     this.setState({
       checked: !currentState,
     });
   }
   handleUrnikChange(){
     const currentState = this.state.urnikChecked;
+    if(currentState){
+      this.nesledi()
+    }
+    else{
+      this.sledi()
+    }
     this.setState({
       urnikChecked: !currentState,
     });
+  }
+  async ugasni(){
+    fetch(endpoints.luci+"/luci/ugasni"+this.props.sobaId+"/"+this.props.product.lucId)
+      .then(res => res.json())
+      .then((result) => {
+        console.log(result);
+      })
+  }
+  async prizgi(){
+    fetch(endpoints.luci+"/luci/prizgi/"+this.props.sobaId+"/"+this.props.product.lucId)
+      .then(res => res.json())
+      .then((result) => {
+        console.log(result);
+      })
+  }
+  async sledi(){
+    fetch(endpoints.luci+"/luci/slediurniku/"+this.props.sobaId+"/"+this.props.product.lucId)
+      .then(res => res.json())
+      .then((result) => {
+        console.log(result);
+      })
+  }
+  async nesledi(){
+    fetch(endpoints.luci+"/luci/neslediurniku/"+this.props.sobaId+"/"+this.props.product.lucId)
+      .then(res => res.json())
+      .then((result) => {
+        console.log(result);
+      })
   }
   render() {
 
