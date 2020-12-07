@@ -12,7 +12,7 @@ import SettingsView from 'src/views/settings/SettingsView';
 import LuciView  from 'src/views/luci';
 import PivoView  from 'src/views/pivo';
 import ZvocnikiView from 'src/views/zvocniki';
-import ObvestilaView from 'src/views/zvocniki';
+import ObvestilaView from 'src/views/obvestila/ObvestilaListView';
 
 const routes = [
   {
@@ -24,7 +24,6 @@ const routes = [
       { path: 'pivo', element: <PivoView /> },
       { path: 'zvocniki', element: <ZvocnikiView /> },
       { path: 'racun', element: <AccountView /> },
-      { path: 'nastavitve', element: <SettingsView /> },
       { path: 'obvestila', element: <ObvestilaView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

@@ -7,34 +7,52 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
+import endpoints from '../../../endpoints';
 
+class ObvestilaListView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isObvestilaLoaded: false,
+      obvestila: []
+    };
+  }
+  async componentDidMount() {
+    fetch(endpoints.obvestila+"/listNotifications")
+    .then(res => res.json())
+    .then((result) => {
+      var obvestila = result
+      console.log(obvestila);
+      this.setState({
+        isObvestilaLoaded: true,
+        obvestila: obvestila
+      });
+    })
+  }
+  render() {
+    var results = '';
+    if(this.state.isObvestilaLoaded){
+      results = (
+        <Results customers={this.state.obvestila} />
+      );
+    }
+    return (
+      <Page
+      style={{paddingTop: "25px"}}
+        >
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            {results}
+          </Box>
+        </Container>
+      </Page >
+    );
+  }
+}
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.dark,
-    minHeight: '100%',
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
+
   }
 }));
 
-const ObvestilaView = () => {
-  const classes = useStyles();
-  const [customers] = useState(data);
-
-  return (
-    <Page
-      className={classes.root}
-      title="Customers"
-    >
-      <Container maxWidth={false}>
-        <Toolbar />
-        <Box mt={3}>
-          <Results customers={customers} />
-        </Box>
-      </Container>
-    </Page>
-  );
-};
-
-export default ObvestilaView;
+export default ObvestilaListView;

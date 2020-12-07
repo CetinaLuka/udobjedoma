@@ -13,12 +13,15 @@ import TasksProgress from './TasksProgress';
 import TotalCustomers from './TotalCustomers';
 import TotalProfit from './TotalProfit';
 import TrafficByDevice from './TrafficByDevice';
+import endpoints from './../../../endpoints';
 class Dashboard extends React.Component {Page
   constructor(props) {
     super(props);
     this.state = {
       luci: [],
-      isLuciLoaded: false
+      isLuciLoaded: false,
+      obvestila: [],
+      isObvestilaLoaded: false
     };
   }
   async componentDidMount() {
@@ -32,6 +35,16 @@ class Dashboard extends React.Component {Page
           luci: luci
         });
       })
+    fetch(endpoints.obvestila+"/listNotifications")
+    .then(res => res.json())
+    .then((result) => {
+      var obvestila = result
+      console.log(luci);
+      this.setState({
+        isObvestilaLoaded: true,
+        obvestila: obvestila
+      });
+    })
   }
 
 

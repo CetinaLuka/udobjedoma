@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
 
 const TopBar = ({
   className,
-  onMobileNavOpen,
+  onMobileNavOpen, numOfNotifications,
   ...rest
 }) => {
   const classes = useStyles();
@@ -56,7 +56,7 @@ const TopBar = ({
           <RouterLink to="obvestila">
             <IconButton color="inherit">
               <Badge
-                badgeContent={notifications.length}
+                badgeContent={5}
                 color="primary"
                 variant="dot"
               >
@@ -83,7 +83,8 @@ const TopBar = ({
 
 TopBar.propTypes = {
   className: PropTypes.string,
-  onMobileNavOpen: PropTypes.func
+  onMobileNavOpen: PropTypes.func,
+  numOfNotifications: PropTypes.string
 };
 
 export default TopBar;

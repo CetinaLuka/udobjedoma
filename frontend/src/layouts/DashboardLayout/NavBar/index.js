@@ -26,6 +26,7 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
+import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -60,9 +61,9 @@ const items = [
     title: 'Račun'
   },
   {
-    href: '/app/nastavitve',
-    icon: SettingsIcon,
-    title: 'Nastavitve'
+    href: '/app/obvestila',
+    icon: NotificationsIcon,
+    title: 'Obvestila'
   }
 ];
 

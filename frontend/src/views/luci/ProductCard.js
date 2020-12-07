@@ -51,7 +51,7 @@ class ProductCard extends React.Component {
     });
   }
   async ugasni(){
-    fetch(endpoints.luci+"/luci/ugasni"+this.props.sobaId+"/"+this.props.product.lucId)
+    fetch(endpoints.luci+"/luci/ugasni/"+this.props.sobaId+"/"+this.props.product.lucId)
       .then(res => res.json())
       .then((result) => {
         console.log(result);

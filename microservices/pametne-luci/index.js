@@ -6,13 +6,14 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://soa-user:soa-user@cluster0.ululh.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const swaggerFile = require('./swagger-output.json')
+const swaggerFile = require('./swagger-output.json');
+const fetch = require("node-fetch");
 app.use(express.json());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+app.use(function (req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
 });
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
@@ -23,23 +24,23 @@ app.get('/', (req, res) => {
 
 app.get('/luci', (req, res) => {
 	// #swagger.description = 'Končna točka, ki vrača podatke o vseh sobah in njihovih lučeh'
-	
+
 	res.setHeader('Content-Type', 'application/json');
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(err => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const allItems = collection.find().toArray().then(results => {
-			  console.log(results);
-			  res.send(results);
-			  client.close();
-			  /*
-			  #swagger.responses[200] = {
-				  schema: { $ref: "#/definitions/SeznamSob"},
-				  description: 'Soba z vsemi pripadajočimi lučmi'
-			  }
-			  */
-			})
+			console.log(results);
+			res.send(results);
+			client.close();
+			/*
+			#swagger.responses[200] = {
+				schema: { $ref: "#/definitions/SeznamSob"},
+				description: 'Soba z vsemi pripadajočimi lučmi'
+			}
+			*/
+		})
 			.catch(error => {
 				return res.status(404).send(false);
 				console.error(error);
@@ -56,7 +57,7 @@ app.get('/luci/:sobaId', (req, res) => {
 		  description: 'Id sobe'
 		}
 	*/
-	
+
 	console.log(req.params.sobaId);
 	res.setHeader('Content-Type', 'application/json');
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -64,17 +65,17 @@ app.get('/luci/:sobaId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const allItems = collection.findOne({ _id: ObjectId(req.params.sobaId) }).then(results => {
-			  console.log(results);
-			  res.status(200);
-			  res.send(results);
-			  client.close();
-			  /*
-			  #swagger.responses[200] = {
-				  schema: { $ref: "#/definitions/Soba"},
-				  description: 'Soba z vsemi pripadajočimi lučmi'
-			  }
-			  */
-			})
+			console.log(results);
+			res.status(200);
+			res.send(results);
+			client.close();
+			/*
+			#swagger.responses[200] = {
+				schema: { $ref: "#/definitions/Soba"},
+				description: 'Soba z vsemi pripadajočimi lučmi'
+			}
+			*/
+		})
 			.catch(error => {
 				console.error(error);
 				res.status(400).send(false);
@@ -105,19 +106,19 @@ app.post('/luci/:sobaId', function (req, res) {
 		novaLuc.lucId = ObjectId();
 		const collection = client.db("udobjedoma").collection("luci");
 		const insertItem = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId)},
-			{$push: {luci: novaLuc}}
-			).then(results => {
-			  res.status(200);
-			  res.send(novaLuc);
-			  client.close();
-			  /*
-			  #swagger.responses[200] = {
-				  schema: { $ref: "#/definitions/Luc"},
-				  description: 'Luč'
-			  }
-			  */
-			})
+			{ _id: ObjectId(req.params.sobaId) },
+			{ $push: { luci: novaLuc } }
+		).then(results => {
+			res.status(200);
+			res.send(novaLuc);
+			client.close();
+			/*
+			#swagger.responses[200] = {
+				schema: { $ref: "#/definitions/Luc"},
+				description: 'Luč'
+			}
+			*/
+		})
 			.catch(error => {
 				console.error(error);
 				res.status(400).send(false);
@@ -150,21 +151,25 @@ app.put('/luci/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const deleteItem = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId)},
-			{$set: {"luci.$.luc": req.body.luc, "luci.$.prizgana": req.body.prizgana, "luci.$.svetlost": req.body.svetlost, 
-					"luci.$.barva": req.body.barva, "luci.$.prizgiOb": req.body.prizgiOb, "luci.$.ugasniOb": req.body.ugasniOb, 
-					"luci.$.slediUrniku": req.body.slediUrniku, }}
+			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+			{
+				$set: {
+					"luci.$.luc": req.body.luc, "luci.$.prizgana": req.body.prizgana, "luci.$.svetlost": req.body.svetlost,
+					"luci.$.barva": req.body.barva, "luci.$.prizgiOb": req.body.prizgiOb, "luci.$.ugasniOb": req.body.ugasniOb,
+					"luci.$.slediUrniku": req.body.slediUrniku,
+				}
+			}
 		)
-		.then( result => {
-			  res.status(200);
-			  res.redirect("/luci/"+req.params.sobaId);
-			  client.close();
-		})
-		.catch(error => {
-			console.error(error);
+			.then(result => {
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
 				res.status(400).send(false);
 				client.close();
-		});
+			});
 	});
 });
 //izbrisi luc
@@ -187,19 +192,19 @@ app.delete('/luci/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const deleteItem = collection.updateOne(
-			{"_id": ObjectId(req.params.sobaId)},
-			{$pull: {"luci": {lucId: ObjectId(req.params.lucId)}}}
+			{ "_id": ObjectId(req.params.sobaId) },
+			{ $pull: { "luci": { lucId: ObjectId(req.params.lucId) } } }
 		)
-		.then( result => {
-			res.status(200);
-			res.redirect("/luci/"+req.params.sobaId);
-			client.close();
-		})
-		.catch(error => {
-			console.error(error);
-			res.status(400).send(false);
-			client.close();
-		});
+			.then(result => {
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
+				res.status(400).send(false);
+				client.close();
+			});
 	});
 });
 
@@ -224,20 +229,21 @@ app.get('/luci/prizgi/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const deleteItem = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId)},
-			{$set: {"luci.$.prizgana": true}},
-			{multi: false}
+			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+			{ $set: { "luci.$.prizgana": true } },
+			{ multi: false }
 		)
-		.then( result => {
-			  res.status(200);
-			  res.redirect("/luci/"+req.params.sobaId);
-			  client.close();
-		})
-		.catch(error => {
-			console.error(error);
+			.then(result => {
+				posljiSporocilo("Luč z id "+req.params.lucId+" je bila prižgana");
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
 				res.status(400).send(false);
 				client.close();
-		});
+			});
 	});
 });
 //ugasni luc
@@ -259,19 +265,20 @@ app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const luc = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId)},
-			{$set: {"luci.$.prizgana": false}}
+			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+			{ $set: { "luci.$.prizgana": false } }
 		)
-		.then( result => {
-			  res.status(200);
-			  res.redirect("/luci/"+req.params.sobaId);
-			  client.close();
-		})
-		.catch(error => {
-			console.error(error);
+			.then(result => {
+				posljiSporocilo("Luč z id "+req.params.lucId+" je bila ugasnjena");
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
 				res.status(400).send(false);
 				client.close();
-		});
+			});
 	});
 });
 //vklopi sledenje urniku
@@ -293,19 +300,20 @@ app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const luc = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId)},
-			{$set: {"luci.$.slediUrniku": true}}
+			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+			{ $set: { "luci.$.slediUrniku": true } }
 		)
-		.then( result => {
-			  res.status(200);
-			  res.redirect("/luci/"+req.params.sobaId);
-			  client.close();
-		})
-		.catch(error => {
-			console.error(error);
+			.then(result => {
+				posljiSporocilo("Luč z id "+req.params.lucId+" sledi urniku");
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
 				res.status(400).send(false);
 				client.close();
-		});
+			});
 	});
 });
 //izklopi sledenje urniku
@@ -327,22 +335,43 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 		if (err) return console.error(err)
 		const collection = client.db("udobjedoma").collection("luci");
 		const luc = collection.updateOne(
-			{_id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId)},
-			{$set: {"luci.$.slediUrniku": false}}
+			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+			{ $set: { "luci.$.slediUrniku": false } }
 		)
-		.then( result => {
-			  res.status(200);
-			  res.redirect("/luci/"+req.params.sobaId);
-			  client.close();
-		})
-		.catch(error => {
-			console.error(error);
+			.then(result => {
+				posljiSporocilo("Luč z id "+req.params.lucId+" ne sledi urniku");
+				res.status(200);
+				res.redirect("/luci/" + req.params.sobaId);
+				client.close();
+			})
+			.catch(error => {
+				console.error(error);
 				res.status(400).send(false);
 				client.close();
-		});
+			});
 	});
 });
+function posljiSporocilo(text) {
+	var obvestilo = {
+		userId: [],
+		  showDateTim: new Date().toISOString(),
+		  wasShown: false,
+		  text: text,
+		  extService: "Pametne luči"
+	};
+	fetch("http://studentdocker.informatika.uni-mb.si:2207/notification", {
+		method: 'post',
+		body: JSON.stringify(obvestilo),
+		headers: { 'Content-Type': 'application/json' }
+		}	
+	)
+	.then(function (response) {
+		return response.json();
+	}).then(function (data) {
+		console.log(data);
+	});
+}
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+	console.log(`Example app listening at http://localhost:${port}`)
 })
