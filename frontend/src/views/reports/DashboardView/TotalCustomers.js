@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import {
   Avatar,
   Box,
@@ -15,6 +15,8 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TotalCustomers = ({ className, ...rest }) => {
+const TotalCustomers = ({ className, glasba, stanje, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -58,13 +60,13 @@ const TotalCustomers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              Never gonna give you up
+              {glasba.ime}
             </Typography>
             <Typography
               color="textPrimary"
               variant="h6"
             >
-              Rick Astley
+              {glasba.povezava}
             </Typography>
           </Grid>
           <Grid item>
@@ -79,7 +81,7 @@ const TotalCustomers = ({ className, ...rest }) => {
           display="flex"
           alignItems="center"
         >
-          <PauseCircleFilledIcon className={classes.differenceIcon} />
+          {stanje ? <PlayCircleFilledIcon className={classes.differenceIcon} /> : <PauseCircleFilledIcon className={classes.differenceIcon} />}
           <Typography
             className={classes.differenceValue}
             variant="body2"
@@ -89,7 +91,7 @@ const TotalCustomers = ({ className, ...rest }) => {
             color="textSecondary"
             variant="caption"
           >
-            Se predvaja
+            {stanje ? <span>Glasba se predvaja</span> : <span>Glasba se ne predvaja</span>}
           </Typography>
         </Box>
       </CardContent>
@@ -98,7 +100,9 @@ const TotalCustomers = ({ className, ...rest }) => {
 };
 
 TotalCustomers.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  glasba: PropTypes.object,
+  stanje: PropTypes.bool
 };
 
 export default TotalCustomers;

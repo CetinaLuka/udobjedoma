@@ -92,7 +92,7 @@ const Budget = ({ className, steviloLuci, ...rest }) => {
 
 Budget.propTypes = {
   className: PropTypes.string,
-  steviloLuci: PropTypes.string
+  steviloLuci: PropTypes.number
 };
 
 export default Budget;

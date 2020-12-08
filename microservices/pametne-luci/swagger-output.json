@@ -112,6 +112,47 @@
     "/luci/{sobaId}/{lucId}": {
       "put": {
         "tags": [],
+        "description": "Končna točka za posodobitev luči",
+        "parameters": [
+          {
+            "name": "sobaId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id sobe v kateri želimo posodobiti luč"
+          },
+          {
+            "name": "lucId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id luči, ki jo želimo posodobiti"
+          },
+          {
+            "name": "novaLuc",
+            "schema": {
+              "$ref": "#/definitions/Luc"
+            },
+            "description": "Json nove luci",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/luci/delete/{sobaId}/{lucId}": {
+      "delete": {
+        "tags": [],
         "description": "Končna točka, ki izbriše luč",
         "parameters": [
           {

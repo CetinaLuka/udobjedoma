@@ -173,7 +173,7 @@ app.put('/luci/:sobaId/:lucId', (req, res) => {
 	});
 });
 //izbrisi luc
-app.delete('/luci/:sobaId/:lucId', (req, res) => {
+app.delete('/luci/delete/:sobaId/:lucId', (req, res) => {
 	/*
 		#swagger.description = 'Končna točka, ki izbriše luč'
 		#swagger.parameters['sobaId'] = {
@@ -339,6 +339,7 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 			{ $set: { "luci.$.slediUrniku": false } }
 		)
 			.then(result => {
+				console.log("ne sledi");
 				posljiSporocilo("Luč z id "+req.params.lucId+" ne sledi urniku");
 				res.status(200);
 				res.redirect("/luci/" + req.params.sobaId);
@@ -352,9 +353,10 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 	});
 });
 function posljiSporocilo(text) {
+	console.log("ext service");
 	var obvestilo = {
 		userId: [],
-		  showDateTim: new Date().toISOString(),
+		  showDateTime: new Date(),
 		  wasShown: false,
 		  text: text,
 		  extService: "Pametne luči"
@@ -366,10 +368,14 @@ function posljiSporocilo(text) {
 		}	
 	)
 	.then(function (response) {
+		console.log("ext service uspeh");
+		console.log(data);
 		return response.json();
 	}).then(function (data) {
+		console.log("ext service uspeh");
 		console.log(data);
-	});
+	})
+	.catch(error => {console.log("ext service napaka"); console.log(error)})
 }
 
 app.listen(port, () => {

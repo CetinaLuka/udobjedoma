@@ -94,7 +94,7 @@ const Results = ({ className, customers, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {customers.reverse().slice(0, limit).map((customer) => (
                 <TableRow
                   hover
                   key={customer._id}

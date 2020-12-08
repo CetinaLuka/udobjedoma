@@ -1,5 +1,7 @@
 const endpoints = {
-    luci: "http://localhost:3000",
-    obvestila: "http://studentdocker.informatika.uni-mb.si:2207"
+    luci: "http://studentdocker.informatika.uni-mb.si:2209",
+    obvestila: "http://studentdocker.informatika.uni-mb.si:2207",
+    zvocniki: "https://cors-anywhere.herokuapp.com/http://studentdocker.informatika.uni-mb.si:26901",
+    pivo: ""
 }
 export default endpoints;

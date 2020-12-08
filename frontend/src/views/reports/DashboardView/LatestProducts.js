@@ -57,7 +57,7 @@ const useStyles = makeStyles(({
   }
 }));
 
-const LatestProducts = ({ className, ...rest }) => {
+const LatestProducts = ({ className, obvestila, ...rest }) => {
   const classes = useStyles();
   const [products] = useState(data);
 
@@ -72,7 +72,7 @@ const LatestProducts = ({ className, ...rest }) => {
       />
       <Divider />
       <List>
-        {products.map((product, i) => (
+        {obvestila.slice(0,5).map((product, i) => (
           <ListItem
             divider={i < products.length - 1}
             key={product.id}
@@ -81,18 +81,17 @@ const LatestProducts = ({ className, ...rest }) => {
               <img
                 alt="Product"
                 className={classes.image}
-                src={product.imageUrl}
+                src={'/static/images/notification.svg'}
               />
             </ListItemAvatar>
             <ListItemText
-              primary={product.name}
-              secondary={`${product.updatedAt.fromNow()}`}
+              primary={product.text}
+              secondary={`${moment(product.showDateTime).fromNow()}`}
             />
             <IconButton
               edge="end"
               size="small"
             >
-              <MoreVertIcon />
             </IconButton>
           </ListItem>
         ))}
@@ -119,7 +118,8 @@ const LatestProducts = ({ className, ...rest }) => {
 };
 
 LatestProducts.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  obvestila: PropTypes.object
 };
 
 export default LatestProducts;

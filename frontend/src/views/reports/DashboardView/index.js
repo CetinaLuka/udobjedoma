@@ -21,11 +21,14 @@ class Dashboard extends React.Component {Page
       luci: [],
       isLuciLoaded: false,
       obvestila: [],
-      isObvestilaLoaded: false
+      isObvestilaLoaded: false,
+      trenutnoPredvajanaGlasba: null,
+      isGlasbaLoaded: false,
+      stanjeZvocnika: false
     };
   }
   async componentDidMount() {
-    fetch("http://localhost:3000/luci")
+    fetch(endpoints.luci+"/luci")
       .then(res => res.json())
       .then((result) => {
         var luci = result
@@ -38,11 +41,28 @@ class Dashboard extends React.Component {Page
     fetch(endpoints.obvestila+"/listNotifications")
     .then(res => res.json())
     .then((result) => {
-      var obvestila = result
-      console.log(luci);
+      var obvestila = result.reverse();
       this.setState({
         isObvestilaLoaded: true,
         obvestila: obvestila
+      });
+    })
+    fetch(endpoints.zvocniki+"/pridobiTrenutnoPredvajanoGlasbo")
+    .then(res => res.json())
+    .then((result) => {
+      var glasba = result
+      this.setState({
+        isGlasbaLoaded: true,
+        trenutnoPredvajanaGlasba: glasba
+      });
+    })
+    fetch(endpoints.zvocniki+"/preveriStanje")
+    .then(res => res.json())
+    .then((result) => {
+      var glasba = result
+      console.log(glasba);
+      this.setState({
+        stanjeZvocnika: glasba.stanje
       });
     })
   }
@@ -66,6 +86,21 @@ class Dashboard extends React.Component {Page
         })
         luciSobe.push(steviloLuciSoba);
       });
+    }
+    var trenutnaGlasba = {
+      ime: "nobena skladba se ne predvaja",
+      povezava: " ",
+      id: " "
+    };
+    if(this.state.isGlasbaLoaded){
+      if(this.state.trenutnoPredvajanaGlasba.predvajano != "-1"){
+        trenutnaGlasba = this.state.trenutnoPredvajanaGlasba;
+      }
+      console.log(trenutnaGlasba);
+    }
+    var obvestila = [];
+    if(this.state.isObvestilaLoaded){
+      obvestila = this.state.obvestila.reverse();
     }
     
     return (
@@ -94,7 +129,7 @@ class Dashboard extends React.Component {Page
               xl={3}
               xs={12}
             >
-              <TotalCustomers />
+              <TotalCustomers glasba={trenutnaGlasba} stanje={this.state.stanjeZvocnika}/>
             </Grid>
             <Grid
               item
@@ -112,7 +147,7 @@ class Dashboard extends React.Component {Page
               xl={3}
               xs={12}
             >
-              <TotalProfit />
+              <TotalProfit/>
             </Grid>
             <Grid
               item
@@ -130,7 +165,7 @@ class Dashboard extends React.Component {Page
               xl={3}
               xs={12}
             >
-              <LatestProducts />
+              <LatestProducts obvestila={obvestila}/>
             </Grid>
           </Grid>
         </Container>

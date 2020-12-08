@@ -32,6 +32,7 @@ class LuciView extends React.Component {
           luci: luci
         });
       })
+      
   }
 
   render() {
