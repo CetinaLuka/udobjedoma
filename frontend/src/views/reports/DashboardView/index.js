@@ -24,7 +24,9 @@ class Dashboard extends React.Component {Page
       isObvestilaLoaded: false,
       trenutnoPredvajanaGlasba: null,
       isGlasbaLoaded: false,
-      stanjeZvocnika: false
+      stanjeZvocnika: false,
+      pivo: null,
+      isPivoLoaded: false
     };
   }
   async componentDidMount() {
@@ -53,7 +55,7 @@ class Dashboard extends React.Component {Page
       var glasba = result
       this.setState({
         isGlasbaLoaded: true,
-        trenutnoPredvajanaGlasba: glasba
+        trenutnoPredvajanaGlasba: glasba.predvajano
       });
     })
     fetch(endpoints.zvocniki+"/preveriStanje")
@@ -63,6 +65,16 @@ class Dashboard extends React.Component {Page
       console.log(glasba);
       this.setState({
         stanjeZvocnika: glasba.stanje
+      });
+    })
+    fetch(endpoints.pivo+"/listBeer")
+    .then(res => res.json())
+    .then((result) => {
+      var pivo = result
+      console.log(pivo);
+      this.setState({
+        pivo: pivo,
+        isPivoLoaded: true
       });
     })
   }
@@ -88,12 +100,12 @@ class Dashboard extends React.Component {Page
       });
     }
     var trenutnaGlasba = {
-      ime: "nobena skladba se ne predvaja",
-      povezava: " ",
-      id: " "
+      Ime: "nobena skladba se ne predvaja",
+      Povezava: " ",
+      ID: " "
     };
     if(this.state.isGlasbaLoaded){
-      if(this.state.trenutnoPredvajanaGlasba.predvajano != "-1"){
+      if(this.state.trenutnoPredvajanaGlasba != "-1"){
         trenutnaGlasba = this.state.trenutnoPredvajanaGlasba;
       }
       console.log(trenutnaGlasba);
@@ -101,6 +113,18 @@ class Dashboard extends React.Component {Page
     var obvestila = [];
     if(this.state.isObvestilaLoaded){
       obvestila = this.state.obvestila.reverse();
+    }
+    var steviloPiv = 0;
+    var steviloHladnihPiv = 0;
+    if(this.state.isPivoLoaded){
+      this.state.pivo.forEach((vrsta) => {
+        vrsta.beerList.forEach((pivo) => {
+          steviloPiv++;
+          if(pivo.temperature >= 4 && pivo.temperature <= 8){
+            steviloHladnihPiv++;
+          }
+        })
+      })
     }
     
     return (
@@ -138,7 +162,7 @@ class Dashboard extends React.Component {Page
               xl={3}
               xs={12}
             >
-              <TasksProgress />
+              <TasksProgress steviloPiv={steviloPiv} />
             </Grid>
             <Grid
               item
@@ -147,7 +171,7 @@ class Dashboard extends React.Component {Page
               xl={3}
               xs={12}
             >
-              <TotalProfit/>
+              <TotalProfit steviloHladnihPiv={steviloHladnihPiv}/>
             </Grid>
             <Grid
               item

@@ -60,14 +60,16 @@ const TotalCustomers = ({ className, glasba, stanje, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              {glasba.ime}
+              {glasba.Ime}
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h6"
-            >
-              {glasba.povezava}
-            </Typography>
+            <a href={"//"+glasba.Povezava} target="_blank">
+              <Typography
+                color="textPrimary"
+                variant="h6"
+              >
+                {glasba.Povezava}
+              </Typography>
+            </a>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}
@@ -91,7 +93,7 @@ const TotalCustomers = ({ className, glasba, stanje, ...rest }) => {
             color="textSecondary"
             variant="caption"
           >
-            {stanje ? <span>Glasba se predvaja</span> : <span>Glasba se ne predvaja</span>}
+            {stanje ? <span>Zvočniki so vklopljeni</span> : <span>Zvočniki so izklopljeni</span>}
           </Typography>
         </Box>
       </CardContent>

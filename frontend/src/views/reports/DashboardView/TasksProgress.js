@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TasksProgress = ({ className, ...rest }) => {
+const TasksProgress = ({ className, steviloPiv, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -44,13 +44,13 @@ const TasksProgress = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              KOLIČINA PREOSTALEGA PIVA
+              ŠTEVILO PREOSTALIH PIV
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              75.5%
+              {steviloPiv}
             </Typography>
           </Grid>
           <Grid item>
@@ -72,7 +72,8 @@ const TasksProgress = ({ className, ...rest }) => {
 };
 
 TasksProgress.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  steviloPiv: PropTypes.number
 };
 
 export default TasksProgress;

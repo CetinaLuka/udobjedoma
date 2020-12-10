@@ -9,66 +9,67 @@ import { Pagination } from '@material-ui/lab';
 import Page from 'src/components/Page';
 import Toolbar from './Toolbar';
 import ProductCard from './ProductCard';
-import data from './data';
+import endpoints from '../../endpoints';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.dark,
-    minHeight: '100%',
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
-  },
-  productCard: {
-    height: '100%'
+
+class PivoView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pivo: null,
+      isPivoLoaded: false
+    };
   }
-}));
 
-const PivoView = () => {
-  const classes = useStyles();
-  const [products] = useState(data);
+  async componentDidMount() {
+    fetch(endpoints.pivo + "/listBeer")
+      .then(res => res.json())
+      .then((result) => {
+        var pivo = result
+        console.log(pivo);
+        this.setState({
+          pivo: pivo,
+          isPivoLoaded: true
+        });
+      })
+  }
 
-  return (
-    <Page
-      className={classes.root}
-      title="Products"
-    >
-      <Container maxWidth={false}>
-        <Toolbar />
-        <Box mt={3}>
-          <Grid
-            container
-            spacing={3}
-          >
-            {products.map((product) => (
-              <Grid
-                item
-                key={product.id}
-                lg={4}
-                md={6}
-                xs={12}
-              >
-                <ProductCard
-                  className={classes.productCard}
-                  product={product}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-        <Box
-          mt={3}
-          display="flex"
-          justifyContent="center"
-        >
-          <Pagination
-            color="primary"
-            count={3}
-            size="small"
-          />
-        </Box>
-      </Container>
-    </Page>
-  );
-};
+
+  render() {
+
+    var pivo = [];
+    if(this.state.isPivoLoaded){
+      pivo = this.state.pivo
+    }
+    return (
+      <Page
+        title="Products"
+      >
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            <Grid
+              container
+              spacing={3}
+            >
+              {pivo.map((product) => (
+                <Grid
+                  item
+                  key={product.id}
+                  lg={4}
+                  md={6}
+                  xs={12}
+                >
+                  <ProductCard
+                    product={product}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Container>
+      </Page>
+    );
+  }
+}
 
 export default PivoView;

@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TotalProfit = ({ className, ...rest }) => {
+const TotalProfit = ({ className, steviloHladnihPiv, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -42,13 +42,13 @@ const TotalProfit = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              ŠTEVILO NALITIH VRČKOV PIVA
+              ŠTEVILO POPOLNO OHLAJENIH PIV
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              200
+              {steviloHladnihPiv}
             </Typography>
           </Grid>
           <Grid item>
@@ -64,7 +64,8 @@ const TotalProfit = ({ className, ...rest }) => {
 };
 
 TotalProfit.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  steviloHladnihPiv: PropTypes.number
 };
 
 export default TotalProfit;

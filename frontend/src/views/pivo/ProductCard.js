@@ -9,112 +9,115 @@ import {
   Divider,
   Grid,
   Typography,
-  makeStyles
+  makeStyles,
+  Button
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import endpoints from '../../endpoints';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  statsItem: {
-    alignItems: 'center',
-    display: 'flex'
-  },
-  statsIcon: {
-    marginRight: theme.spacing(1)
+class ProductCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pivo: null,
+      isPivoLoaded: false
+    };
+    this.nalijPivo = this.nalijPivo.bind(this);
   }
-}));
 
-const ProductCard = ({ className, product, ...rest }) => {
-  const classes = useStyles();
+  nalijPivo() {
+    var amount = { amount: 1 }
+    fetch(endpoints.pivo + "/pourBeer/" + this.props.product._id,
+      {
+        method: "put",
+        body: JSON.stringify(amount),
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+      .then(res => res.json())
+      .then((result) => {
+        var pivo = result
+        console.log(pivo);
+      })
+  }
 
-  return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <CardContent>
-        <Box
-          display="flex"
-          justifyContent="center"
-          mb={3}
-        >
-          <Avatar
-            alt="Product"
-            src={product.media}
-            variant="square"
-          />
+
+  render() {
+    return (
+      <Card
+      >
+        <CardContent>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mb={3}
+          >
+            <Avatar
+              alt="Product"
+              src={'/static/images/beer.svg'}
+              variant="square"
+            />
+          </Box>
+          <Typography
+            align="center"
+            color="textPrimary"
+            gutterBottom
+            variant="h4"
+          >
+            {this.props.product.name}
+          </Typography>
+          <Typography
+            align="center"
+            color="textPrimary"
+            variant="body1"
+          >
+            {this.props.product.brewery}
+          </Typography>
+          <br/>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mb={3}
+          >
+            <Button style={{ color: "white", backgroundColor: "rgb(63, 81, 181)", align: "middle" }} onClick={this.nalijPivo}>Nalij pivo</Button>
+          </Box>
+
+        </CardContent>
+        <Box flexGrow={1} />
+        <Divider />
+        <Box p={2}>
+          <Grid
+            container
+            justify="space-between"
+            spacing={2}
+          >
+            <Grid
+              item
+            >
+              <Typography
+                color="textSecondary"
+                display="inline"
+                variant="body2"
+              >
+                Na zalogi: {this.props.product.beerList.length}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+            >
+              <Typography
+                color="textSecondary"
+                display="inline"
+                variant="body2"
+              >
+                {this.props.product.alcoholPercentage}
+                % alkohola
+              </Typography>
+            </Grid>
+          </Grid>
         </Box>
-        <Typography
-          align="center"
-          color="textPrimary"
-          gutterBottom
-          variant="h4"
-        >
-          {product.title}
-        </Typography>
-        <Typography
-          align="center"
-          color="textPrimary"
-          variant="body1"
-        >
-          {product.description}
-        </Typography>
-      </CardContent>
-      <Box flexGrow={1} />
-      <Divider />
-      <Box p={2}>
-        <Grid
-          container
-          justify="space-between"
-          spacing={2}
-        >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <AccessTimeIcon
-              className={classes.statsIcon}
-              color="action"
-            />
-            <Typography
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
-              Updated 2hr ago
-            </Typography>
-          </Grid>
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <GetAppIcon
-              className={classes.statsIcon}
-              color="action"
-            />
-            <Typography
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
-              {product.totalDownloads}
-              {' '}
-              Downloads
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
-    </Card>
-  );
-};
-
-ProductCard.propTypes = {
-  className: PropTypes.string,
-  product: PropTypes.object.isRequired
-};
+      </Card>
+    );
+  }
+}
 
 export default ProductCard;
