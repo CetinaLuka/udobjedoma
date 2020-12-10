@@ -361,7 +361,7 @@ function posljiSporocilo(text) {
 		  text: text,
 		  extService: "Pametne luči"
 	};
-	fetch("http://studentdocker.informatika.uni-mb.si:2207/notification", {
+	fetch("http://172.17.0.88:3000/notification", {
 		method: 'post',
 		body: JSON.stringify(obvestilo),
 		headers: { 'Content-Type': 'application/json' }

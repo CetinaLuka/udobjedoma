@@ -43,7 +43,7 @@ class Dashboard extends React.Component {Page
     fetch(endpoints.obvestila+"/listNotifications")
     .then(res => res.json())
     .then((result) => {
-      var obvestila = result.reverse();
+      var obvestila = result;
       this.setState({
         isObvestilaLoaded: true,
         obvestila: obvestila
