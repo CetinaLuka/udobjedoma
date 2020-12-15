@@ -5,26 +5,27 @@ import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
 import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
+import LoginWrapper from 'src/views/auth/LoginWrapper';
 import NotFoundView from 'src/views/errors/NotFoundView';
 import RegisterView from 'src/views/auth/RegisterView';
-import SettingsView from 'src/views/settings/SettingsView';
 
 import LuciView  from 'src/views/luci';
 import PivoView  from 'src/views/pivo';
 import ZvocnikiView from 'src/views/zvocniki';
 import ObvestilaView from 'src/views/obvestila/ObvestilaListView';
+import Logout from './views/auth/Logout';
 
-const routes = [
+const routes = (isLoggedIn) => [
   {
     path: '/app',
-    element: <DashboardLayout />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
-      { path: 'dashboard', element: <DashboardView /> },
-      { path: 'luci', element: <LuciView /> },
-      { path: 'pivo', element: <PivoView /> },
-      { path: 'zvocniki', element: <ZvocnikiView /> },
-      { path: 'racun', element: <AccountView /> },
-      { path: 'obvestila', element: <ObvestilaView /> },
+      { path: 'dashboard', element: isLoggedIn ? <DashboardView /> : <Navigate to="/login" /> },
+      { path: 'luci', element: isLoggedIn ? <LuciView /> : <Navigate to="/login" /> },
+      { path: 'pivo', element: isLoggedIn ? <PivoView /> : <Navigate to="/login" /> },
+      { path: 'zvocniki', element: isLoggedIn ? <ZvocnikiView /> : <Navigate to="/login" /> },
+      { path: 'racun', element: isLoggedIn ? <AccountView /> : <Navigate to="/login" /> },
+      { path: 'obvestila', element: isLoggedIn ? <ObvestilaView /> : <Navigate to="/login" /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
@@ -32,7 +33,8 @@ const routes = [
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: <LoginView /> },
+      { path: 'login', element: <LoginWrapper /> },
+      { path: 'odjava', element: <Logout /> },
       { path: 'register', element: <RegisterView /> },
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <Navigate to="/app/dashboard" /> },

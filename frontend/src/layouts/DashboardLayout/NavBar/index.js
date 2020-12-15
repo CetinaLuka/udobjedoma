@@ -27,6 +27,7 @@ import {
 import NavItem from './NavItem';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -64,6 +65,11 @@ const items = [
     href: '/app/obvestila',
     icon: NotificationsIcon,
     title: 'Obvestila'
+  },
+  {
+    href: '/odjava',
+    icon: ExitToAppIcon,
+    title: 'Odjava'
   }
 ];
 
