@@ -14,6 +14,7 @@ import TotalCustomers from './TotalCustomers';
 import TotalProfit from './TotalProfit';
 import TrafficByDevice from './TrafficByDevice';
 import endpoints from './../../../endpoints';
+import auth from '../../auth/auth';
 class Dashboard extends React.Component {Page
   constructor(props) {
     super(props);
@@ -40,7 +41,12 @@ class Dashboard extends React.Component {Page
           luci: luci
         });
       })
-    fetch(endpoints.obvestila+"/listNotifications")
+    fetch(endpoints.obvestila+"/listNotifications/"+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
     .then(res => res.json())
     .then((result) => {
       var obvestila = result;
@@ -49,7 +55,12 @@ class Dashboard extends React.Component {Page
         obvestila: obvestila
       });
     })
-    fetch(endpoints.zvocniki+"/pridobiTrenutnoPredvajanoGlasbo")
+    fetch(endpoints.zvocniki+"/pridobiTrenutnoPredvajanoGlasbo",
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
     .then(res => res.json())
     .then((result) => {
       var glasba = result
@@ -58,7 +69,12 @@ class Dashboard extends React.Component {Page
         trenutnoPredvajanaGlasba: glasba.predvajano
       });
     })
-    fetch(endpoints.zvocniki+"/preveriStanje")
+    fetch(endpoints.zvocniki+"/preveriStanje",
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
     .then(res => res.json())
     .then((result) => {
       var glasba = result
@@ -67,7 +83,12 @@ class Dashboard extends React.Component {Page
         stanjeZvocnika: glasba.stanje
       });
     })
-    fetch(endpoints.pivo+"/listBeer")
+    fetch(endpoints.pivo+"/listBeer",
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
     .then(res => res.json())
     .then((result) => {
       var pivo = result
@@ -112,7 +133,7 @@ class Dashboard extends React.Component {Page
     }
     var obvestila = [];
     if(this.state.isObvestilaLoaded){
-      obvestila = this.state.obvestila.reverse();
+        obvestila = this.state.obvestila.reverse();
     }
     var steviloPiv = 0;
     var steviloHladnihPiv = 0;

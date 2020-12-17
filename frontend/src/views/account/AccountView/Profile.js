@@ -13,6 +13,7 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
+import auth from 'src/views/auth/auth';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -22,6 +23,7 @@ const user = {
   name: 'Katarina Smith',
   timezone: 'GTM-7'
 };
+const userInfo = auth.getUserInfo();
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -54,13 +56,13 @@ const Profile = ({ className, ...rest }) => {
             gutterBottom
             variant="h3"
           >
-            {user.name}
+            {userInfo.uporabniskoIme}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body1"
           >
-            {`${user.city} ${user.country}`}
+            {`Maribor, Slovenija`}
           </Typography>
           <Typography
             className={classes.dateText}
@@ -71,16 +73,6 @@ const Profile = ({ className, ...rest }) => {
           </Typography>
         </Box>
       </CardContent>
-      <Divider />
-      <CardActions>
-        <Button
-          color="primary"
-          fullWidth
-          variant="text"
-        >
-          Upload picture
-        </Button>
-      </CardActions>
     </Card>
   );
 };

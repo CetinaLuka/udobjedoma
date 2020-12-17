@@ -131,6 +131,7 @@ class LoginView extends React.Component {
               }) => (
                 <form onSubmit={this.handleSubmit}>
                   <Box mb={3}>
+                    <br/>
                     <Typography
                       color="textPrimary"
                       variant="h2"

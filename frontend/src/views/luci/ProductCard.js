@@ -15,6 +15,7 @@ import {
   Switch
 } from '@material-ui/core';
 import endpoints from '../../endpoints';
+import auth from '../auth/auth';
 
 class ProductCard extends React.Component {
   constructor(props) {
@@ -51,28 +52,48 @@ class ProductCard extends React.Component {
     });
   }
   async ugasni(){
-    fetch(endpoints.luci+"/luci/ugasni/"+this.props.sobaId+"/"+this.props.product.lucId)
+    fetch(endpoints.luci+"/luci/ugasni/"+this.props.sobaId+"/"+this.props.product.lucId+"?id="+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);
       })
   }
   async prizgi(){
-    fetch(endpoints.luci+"/luci/prizgi/"+this.props.sobaId+"/"+this.props.product.lucId)
+    fetch(endpoints.luci+"/luci/prizgi/"+this.props.sobaId+"/"+this.props.product.lucId+"?id="+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);
       })
   }
   async sledi(){
-    fetch(endpoints.luci+"/luci/slediurniku/"+this.props.sobaId+"/"+this.props.product.lucId)
+    fetch(endpoints.luci+"/luci/slediurniku/"+this.props.sobaId+"/"+this.props.product.lucId+"?id="+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);
       })
   }
   async nesledi(){
-    fetch(endpoints.luci+"/luci/neslediurniku/"+this.props.sobaId+"/"+this.props.product.lucId)
+    fetch(endpoints.luci+"/luci/neslediurniku/"+this.props.sobaId+"/"+this.props.product.lucId+"?id="+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);

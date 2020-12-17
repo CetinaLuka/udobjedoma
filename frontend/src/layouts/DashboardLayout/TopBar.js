@@ -53,7 +53,7 @@ const TopBar = ({
         </Typography>
         <Box flexGrow={1} />
         <Hidden mdDown>
-          <RouterLink to="obvestila">
+          <RouterLink to="/app/obvestila">
             <IconButton color="inherit">
               <Badge
                 badgeContent={5}
@@ -64,9 +64,11 @@ const TopBar = ({
               </Badge>
             </IconButton>
           </RouterLink>
-          <IconButton color="inherit">
-            <InputIcon />
-          </IconButton>
+          <RouterLink to="/odjava">
+            <IconButton color="inherit">
+              <InputIcon />
+            </IconButton>
+          </RouterLink>
         </Hidden>
         <Hidden lgUp>
           <IconButton

@@ -13,6 +13,7 @@ import Page from 'src/components/Page';
 import Toolbar from './Toolbar';
 import ProductCard from './ProductCard';
 import endpoints from '../../endpoints';
+import auth from '../auth/auth';
 
 class ZvocnikiView extends React.Component {
   constructor(props) {
@@ -38,14 +39,22 @@ class ZvocnikiView extends React.Component {
     });
   }
   async ugasni(){
-    fetch(endpoints.zvocniki+"/izklop", {method: 'put'})
+    fetch(endpoints.zvocniki+"/izklop", 
+    {
+      method: 'put',
+      'Authorization': auth.getToken()
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);
       })
   }
   async prizgi(){
-    fetch(endpoints.zvocniki+"/vklop", {method: 'put'})
+    fetch(endpoints.zvocniki+"/vklop", 
+    {
+      method: 'put',
+      'Authorization': auth.getToken()
+    })
       .then(res => res.json())
       .then((result) => {
         console.log(result);
@@ -53,7 +62,12 @@ class ZvocnikiView extends React.Component {
   }
 
   async componentDidMount() {
-    fetch(endpoints.zvocniki + "/pridobiVseGlasbe")
+    fetch(endpoints.zvocniki + "/pridobiVseGlasbe", 
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         var pesmi = result
@@ -63,7 +77,12 @@ class ZvocnikiView extends React.Component {
           isPesmiLoaded: true
         });
       })
-      fetch(endpoints.zvocniki + "/preveriStanje")
+      fetch(endpoints.zvocniki + "/preveriStanje", 
+      {
+        headers: {
+          'Authorization': auth.getToken(),
+        }
+      })
       .then(res => res.json())
       .then((result) => {
         var glasba = result

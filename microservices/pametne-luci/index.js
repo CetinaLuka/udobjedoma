@@ -9,6 +9,8 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require('./swagger-output.json');
 const fetch = require("node-fetch");
 app.use(express.json());
+var cors = require('cors');
+app.use(cors());
 
 app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -222,29 +224,53 @@ app.get('/luci/prizgi/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki jo želimo prižgati'
 		}
 	*/
-	console.log(req.params.sobaId);
-	res.setHeader('Content-Type', 'application/json');
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(err => {
-		if (err) return console.error(err)
-		const collection = client.db("udobjedoma").collection("luci");
-		const deleteItem = collection.updateOne(
-			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
-			{ $set: { "luci.$.prizgana": true } },
-			{ multi: false }
-		)
-			.then(result => {
-				posljiSporocilo("Luč z id "+req.params.lucId+" je bila prižgana");
-				res.status(200);
-				res.redirect("/luci/" + req.params.sobaId);
-				client.close();
-			})
-			.catch(error => {
-				console.error(error);
+	
+	if(req.headers.authorization){
+		
+		fetch('http://172.17.0.76:8081/verificirajZeton', {
+			method: 'get',
+			headers: { 'Authorization': req.headers.authorization }
+		}).then(function (response) {
+			return response.json()
+		}).then(function (data) {
+			if (data.status == 'OK') {
+				res.setHeader('Content-Type', 'application/json');
+				const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+				client.connect(err => {
+					if (err) return console.error(err)
+					const collection = client.db("udobjedoma").collection("luci");
+					const deleteItem = collection.updateOne(
+						{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+						{ $set: { "luci.$.prizgana": true } },
+						{ multi: false }
+					)
+						.then(result => {
+							posljiSporocilo("Luč z id "+req.params.lucId+" je bila prižgana", req.headers.authorization, req.query.id);
+							res.status(200);
+							res.redirect("/luci/" + req.params.sobaId);
+							client.close();
+						})
+						.catch(error => {
+							console.error(error);
+							res.status(400).send(false);
+							client.close();
+						});
+				});
+			}
+			else{
+				console.log("token not ok");
 				res.status(400).send(false);
-				client.close();
-			});
-	});
+			}
+		}).
+		catch(error => {
+			console.log("token error");
+			res.status(400).send(false);
+		});
+	}
+	else{
+		res.status(400).send(false);
+	}
+	
 });
 //ugasni luc
 app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
@@ -259,27 +285,53 @@ app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki jo želimo ugasniti'
 		}
 	*/
-	res.setHeader('Content-Type', 'application/json');
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(err => {
-		if (err) return console.error(err)
-		const collection = client.db("udobjedoma").collection("luci");
-		const luc = collection.updateOne(
-			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
-			{ $set: { "luci.$.prizgana": false } }
-		)
-			.then(result => {
-				posljiSporocilo("Luč z id "+req.params.lucId+" je bila ugasnjena");
-				res.status(200);
-				res.redirect("/luci/" + req.params.sobaId);
-				client.close();
-			})
-			.catch(error => {
-				console.error(error);
+	if(req.headers.authorization){
+		
+		fetch('http://172.17.0.76:8081/verificirajZeton', {
+			method: 'get',
+			headers: { 'Authorization': req.headers.authorization }
+		}).then(function (response) {
+			return response.json()
+		}).then(function (data) {
+			if (data.status == 'OK') {
+				res.setHeader('Content-Type', 'application/json');
+				const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+				client.connect(err => {
+					if (err) return console.error(err)
+					const collection = client.db("udobjedoma").collection("luci");
+					const luc = collection.updateOne(
+						{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+						{ $set: { "luci.$.prizgana": false } }
+					)
+						.then(result => {
+							posljiSporocilo("Luč z id "+req.params.lucId+" je bila ugasnjena", req.headers.authorization, req.query.id);
+							res.status(200);
+							res.redirect("/luci/" + req.params.sobaId);
+							client.close();
+						})
+						.catch(error => {
+							console.error(error);
+							res.status(400).send(false);
+							client.close();
+						});
+				});
+			}
+			else{
+				console.log("token not ok");
 				res.status(400).send(false);
-				client.close();
-			});
-	});
+			}
+		}).
+		catch(error => {
+			console.log("token error");
+			res.status(400).send(false);
+		});
+	}
+	else{
+		res.status(400).send(false);
+	}
+	
+	
+	
 });
 //vklopi sledenje urniku
 app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
@@ -294,27 +346,52 @@ app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki ji želimo vklopiti sledenje urniku'
 		}
 	*/
-	res.setHeader('Content-Type', 'application/json');
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(err => {
-		if (err) return console.error(err)
-		const collection = client.db("udobjedoma").collection("luci");
-		const luc = collection.updateOne(
-			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
-			{ $set: { "luci.$.slediUrniku": true } }
-		)
-			.then(result => {
-				posljiSporocilo("Luč z id "+req.params.lucId+" sledi urniku");
-				res.status(200);
-				res.redirect("/luci/" + req.params.sobaId);
-				client.close();
-			})
-			.catch(error => {
-				console.error(error);
+	
+	if(req.headers.authorization){
+		
+		fetch('http://172.17.0.76:8081/verificirajZeton', {
+			method: 'get',
+			headers: { 'Authorization': req.headers.authorization }
+		}).then(function (response) {
+			return response.json()
+		}).then(function (data) {
+			if (data.status == 'OK') {
+				res.setHeader('Content-Type', 'application/json');
+				res.setHeader('Content-Type', 'application/json');
+				const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+				client.connect(err => {
+					if (err) return console.error(err)
+					const collection = client.db("udobjedoma").collection("luci");
+					const luc = collection.updateOne(
+						{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+						{ $set: { "luci.$.slediUrniku": true } }
+					)
+						.then(result => {
+							posljiSporocilo("Luč z id "+req.params.lucId+" sledi urniku", req.headers.authorization, req.query.id);
+							res.status(200);
+							res.redirect("/luci/" + req.params.sobaId);
+							client.close();
+						})
+						.catch(error => {
+							console.error(error);
+							res.status(400).send(false);
+							client.close();
+						});
+				});
+			}
+			else{
+				console.log("token not ok");
 				res.status(400).send(false);
-				client.close();
-			});
-	});
+			}
+		}).
+		catch(error => {
+			console.log("token error");
+			res.status(400).send(false);
+		});
+	}
+	else{
+		res.status(400).send(false);
+	}
 });
 //izklopi sledenje urniku
 app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
@@ -329,30 +406,58 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki ji želimo izklopiti sledenje urniku'
 		}
 	*/
-	res.setHeader('Content-Type', 'application/json');
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(err => {
-		if (err) return console.error(err)
-		const collection = client.db("udobjedoma").collection("luci");
-		const luc = collection.updateOne(
-			{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
-			{ $set: { "luci.$.slediUrniku": false } }
-		)
-			.then(result => {
-				console.log("ne sledi");
-				posljiSporocilo("Luč z id "+req.params.lucId+" ne sledi urniku");
-				res.status(200);
-				res.redirect("/luci/" + req.params.sobaId);
-				client.close();
-			})
-			.catch(error => {
-				console.error(error);
-				res.status(400).send(false);
-				client.close();
+	
+	if(req.headers.authorization){
+		
+		fetch('http://172.17.0.76:8081/verificirajZeton', {
+			method: 'get',
+			headers: { 'Authorization': req.headers.authorization }
+		}).then(function (response) {
+			return response.json()
+		}).then(function (data) {
+			if (data.status == 'OK') {
+				res.setHeader('Content-Type', 'application/json');
+			const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+			client.connect(err => {
+			if (err) return console.error(err)
+			const collection = client.db("udobjedoma").collection("luci");
+			const luc = collection.updateOne(
+				{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+				{ $set: { "luci.$.slediUrniku": false } }
+			)
+				.then(result => {
+					console.log("ne sledi");
+					posljiSporocilo("Luč z id "+req.params.lucId+" ne sledi urniku", req.headers.authorization, req.query.id);
+					res.status(200);
+					res.redirect("/luci/" + req.params.sobaId);
+					client.close();
+				})
+				.catch(error => {
+					console.error(error);
+					res.status(400).send(false);
+					client.close();
+				});
 			});
-	});
+			}
+			else{
+				console.log("token not ok");
+				res.status(400).send(false);
+			}
+		}).
+		catch(error => {
+			console.log("token error");
+			res.status(400).send(false);
+		});
+		
+		
+		
+		
+	}
+	else{
+		res.status(400).send(false);
+	}
 });
-function posljiSporocilo(text) {
+function posljiSporocilo(text, auth, id) {
 	console.log("ext service");
 	var obvestilo = {
 		userId: [],
@@ -361,15 +466,19 @@ function posljiSporocilo(text) {
 		  text: text,
 		  extService: "Pametne luči"
 	};
+	obvestilo.userId.push(id);
 	fetch("http://172.17.0.88:3000/notification", {
 		method: 'post',
 		body: JSON.stringify(obvestilo),
-		headers: { 'Content-Type': 'application/json' }
+		headers: { 
+			'Content-Type': 'application/json',
+			'Authorization': auth
+		}
 		}	
 	)
 	.then(function (response) {
 		console.log("ext service uspeh");
-		console.log(data);
+		console.log(response);
 		return response.json();
 	}).then(function (data) {
 		console.log("ext service uspeh");

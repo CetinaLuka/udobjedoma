@@ -10,6 +10,7 @@ import Page from 'src/components/Page';
 import Toolbar from './Toolbar';
 import ProductCard from './ProductCard';
 import endpoints from '../../endpoints';
+import auth from '../auth/auth';
 
 
 class PivoView extends React.Component {
@@ -22,7 +23,12 @@ class PivoView extends React.Component {
   }
 
   async componentDidMount() {
-    fetch(endpoints.pivo + "/listBeer")
+    fetch(endpoints.pivo + "/listBeer",
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         var pivo = result

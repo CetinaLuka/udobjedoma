@@ -15,6 +15,7 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import endpoints from '../../endpoints';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import { IconButton } from '@material-ui/core';
+import auth from '../auth/auth';
 
 class ProductCard extends React.Component {
   constructor(props) {
@@ -25,7 +26,13 @@ class ProductCard extends React.Component {
     this.playSong = this.playSong.bind(this);
   }
   async playSong(){
-    fetch(endpoints.zvocniki + "/predvajajDrugoGlasbo?id="+this.props.product.ID, {method: 'post'})
+    fetch(endpoints.zvocniki + "/predvajajDrugoGlasbo?id="+this.props.product.ID, 
+    {
+      method: 'post',
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
       .then(res => res.json())
       .then((result) => {
         var pesmi = result

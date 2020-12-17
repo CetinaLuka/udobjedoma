@@ -8,6 +8,7 @@ import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
 import endpoints from '../../../endpoints';
+import auth from '../../auth/auth';
 
 class ObvestilaListView extends React.Component {
   constructor(props) {
@@ -18,7 +19,12 @@ class ObvestilaListView extends React.Component {
     };
   }
   async componentDidMount() {
-    fetch(endpoints.obvestila+"/listNotifications")
+    fetch(endpoints.obvestila+"/listNotifications/"+auth.getUserInfo().id,
+    {
+      headers: {
+        'Authorization': auth.getToken(),
+      }
+    })
     .then(res => res.json())
     .then((result) => {
       var obvestila = result

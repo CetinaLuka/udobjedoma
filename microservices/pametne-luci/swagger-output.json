@@ -201,6 +201,10 @@
             "required": true,
             "type": "string",
             "description": "Id luči, ki jo želimo prižgati"
+          },
+          {
+            "name": "id",
+            "in": "query"
           }
         ],
         "responses": {
@@ -234,6 +238,10 @@
             "required": true,
             "type": "string",
             "description": "Id luči, ki jo želimo ugasniti"
+          },
+          {
+            "name": "id",
+            "in": "query"
           }
         ],
         "responses": {
@@ -267,6 +275,10 @@
             "required": true,
             "type": "string",
             "description": "Id luči, ki ji želimo vklopiti sledenje urniku"
+          },
+          {
+            "name": "id",
+            "in": "query"
           }
         ],
         "responses": {
@@ -278,6 +290,7 @@
           }
         },
         "produces": [
+          "application/json",
           "application/json"
         ]
       }
@@ -300,6 +313,10 @@
             "required": true,
             "type": "string",
             "description": "Id luči, ki ji želimo izklopiti sledenje urniku"
+          },
+          {
+            "name": "id",
+            "in": "query"
           }
         ],
         "responses": {

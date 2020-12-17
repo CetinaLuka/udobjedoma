@@ -13,6 +13,7 @@ import {
   Button
 } from '@material-ui/core';
 import endpoints from '../../endpoints';
+import auth from '../auth/auth';
 
 class ProductCard extends React.Component {
   constructor(props) {
@@ -25,12 +26,15 @@ class ProductCard extends React.Component {
   }
 
   nalijPivo() {
-    var amount = { amount: 1 }
+    var amount = { amount: 0.5 }
     fetch(endpoints.pivo + "/pourBeer/" + this.props.product._id,
       {
         method: "put",
         body: JSON.stringify(amount),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': auth.getToken()
+        }
       }
     )
       .then(res => res.json())
@@ -42,6 +46,12 @@ class ProductCard extends React.Component {
 
 
   render() {
+    let beerAmount = 0.0;
+    this.props.product.beerList.forEach(element => {
+      console.log(element);
+      let amount = beerAmount+ element.amountLiters;
+      beerAmount = Math.round((amount + Number.EPSILON) * 100) / 100;
+    });
     return (
       <Card
       >
@@ -98,7 +108,7 @@ class ProductCard extends React.Component {
                 display="inline"
                 variant="body2"
               >
-                Na zalogi: {this.props.product.beerList.length}
+                Na zalogi: {beerAmount}
               </Typography>
             </Grid>
             <Grid
