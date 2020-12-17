@@ -42,7 +42,7 @@ class ZvocnikiView extends React.Component {
     fetch(endpoints.zvocniki+"/izklop", 
     {
       method: 'put',
-      'Authorization': auth.getToken()
+      headers: {'Authorization': auth.getToken()}
     })
       .then(res => res.json())
       .then((result) => {
@@ -53,7 +53,7 @@ class ZvocnikiView extends React.Component {
     fetch(endpoints.zvocniki+"/vklop", 
     {
       method: 'put',
-      'Authorization': auth.getToken()
+      headers: {'Authorization': auth.getToken()}
     })
       .then(res => res.json())
       .then((result) => {
