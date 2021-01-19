@@ -43,6 +43,7 @@ class Dashboard extends React.Component {Page
       })
     fetch(endpoints.obvestila+"/listNotifications/"+auth.getUserInfo().id,
     {
+      method: 'get',
       headers: {
         'Authorization': auth.getToken(),
       }
@@ -57,8 +58,9 @@ class Dashboard extends React.Component {Page
     })
     fetch(endpoints.zvocniki+"/pridobiTrenutnoPredvajanoGlasbo",
     {
+      method: 'get',
       headers: {
-        'Authorization': auth.getToken(),
+        'Authorization': auth.getToken()
       }
     })
     .then(res => res.json())
@@ -71,6 +73,7 @@ class Dashboard extends React.Component {Page
     })
     fetch(endpoints.zvocniki+"/preveriStanje",
     {
+      method: 'get',
       headers: {
         'Authorization': auth.getToken(),
       }
@@ -85,6 +88,7 @@ class Dashboard extends React.Component {Page
     })
     fetch(endpoints.pivo+"/listBeer",
     {
+      method: 'get',
       headers: {
         'Authorization': auth.getToken(),
       }

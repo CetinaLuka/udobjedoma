@@ -18,8 +18,16 @@ class LuciView extends React.Component {
     super(props);
     this.state = {
       luci: [],
-      isLoaded: false
+      isLoaded: false,
+      updateValue: ''
     };
+    this.handler = this.handler.bind(this)
+  }
+  handler() {
+    this.setState({
+      updateValue: ' '
+    });
+    this.componentDidMount();
   }
   async componentDidMount() {
     fetch(endpoints.luci+"/luci")
@@ -34,6 +42,7 @@ class LuciView extends React.Component {
       })
       
   }
+  
 
   render() {
     var luciSeznam = '';
@@ -53,6 +62,8 @@ class LuciView extends React.Component {
                 product={luc}
                 soba={soba.soba}
                 sobaId={soba._id}
+                lucId={luc.lucId}
+                updater={this.handler}
               />
             </Grid>
           ))
@@ -73,6 +84,7 @@ class LuciView extends React.Component {
               {luciSeznam}
             </Grid >
           </Box >
+          {this.state.updateValue}
         </Container>
       </Page>
     );

@@ -8,6 +8,31 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require('./swagger-output.json');
 const fetch = require("node-fetch");
+const { v4: uuidv4 } = require('uuid');
+const Bree = require('bree');
+
+const amqplib = require('amqplib');
+var assert = require('assert');
+var util = require('util');
+
+var rabbit_user = "student";
+var rabbit_pwd = "student123";
+var rabbit_host = "172.17.0.94";
+var rabbit_port = "5672";
+var vhost = "";
+
+var storitev_uporabniki = "http://172.17.0.36:8081";
+
+const bree = new Bree({
+	jobs: [
+		{
+			name: 'lights',
+      		interval: 'at 2:00 am'
+		}
+	]
+})
+bree.start();
+
 app.use(express.json());
 var cors = require('cors');
 app.use(cors());
@@ -224,10 +249,10 @@ app.get('/luci/prizgi/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki jo želimo prižgati'
 		}
 	*/
-	
-	if(req.headers.authorization){
-		
-		fetch('http://172.17.0.76:8081/verificirajZeton', {
+
+	if (req.headers.authorization) {
+
+		fetch(storitev_uporabniki+'/verificirajZeton', {
 			method: 'get',
 			headers: { 'Authorization': req.headers.authorization }
 		}).then(function (response) {
@@ -245,32 +270,47 @@ app.get('/luci/prizgi/:sobaId/:lucId', (req, res) => {
 						{ multi: false }
 					)
 						.then(result => {
-							posljiSporocilo("Luč z id "+req.params.lucId+" je bila prižgana", req.headers.authorization, req.query.id);
+							posljiSporocilo("Luč z id " + req.params.lucId + " je bila prižgana", req.headers.authorization, req.query.id);
+							var url = `/luci/prizgi/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("INFO", url, "luc prizgana", correlation);
 							res.status(200);
 							res.redirect("/luci/" + req.params.sobaId);
 							client.close();
 						})
 						.catch(error => {
 							console.error(error);
+							var url = `/luci/prizgi/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("ERROR", url, "error reading from db", correlation);
 							res.status(400).send(false);
 							client.close();
 						});
 				});
 			}
-			else{
+			else {
 				console.log("token not ok");
+				var url = `/luci/prizgi/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token not ok", correlation);
 				res.status(400).send(false);
 			}
 		}).
-		catch(error => {
-			console.log("token error");
-			res.status(400).send(false);
-		});
+			catch(error => {
+				console.log("token error");
+				var url = `/luci/prizgi/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token error", correlation);
+				res.status(400).send(false);
+			});
 	}
-	else{
+	else {
+		var url = `/luci/prizgi/${req.params.lucId}/${req.params.sobaId}`;
+		var correlation = uuidv4();
+		log("ERROR", url, "no headers preset in request", correlation);
 		res.status(400).send(false);
 	}
-	
+
 });
 //ugasni luc
 app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
@@ -285,9 +325,9 @@ app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki jo želimo ugasniti'
 		}
 	*/
-	if(req.headers.authorization){
-		
-		fetch('http://172.17.0.76:8081/verificirajZeton', {
+	if (req.headers.authorization) {
+
+		fetch(storitev_uporabniki+'/verificirajZeton', {
 			method: 'get',
 			headers: { 'Authorization': req.headers.authorization }
 		}).then(function (response) {
@@ -304,34 +344,49 @@ app.get('/luci/ugasni/:sobaId/:lucId', (req, res) => {
 						{ $set: { "luci.$.prizgana": false } }
 					)
 						.then(result => {
-							posljiSporocilo("Luč z id "+req.params.lucId+" je bila ugasnjena", req.headers.authorization, req.query.id);
+							posljiSporocilo("Luč z id " + req.params.lucId + " je bila ugasnjena", req.headers.authorization, req.query.id);
+							var url = `/luci/ugasni/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("INFO", url, "luc ugasnjena", correlation);
 							res.status(200);
 							res.redirect("/luci/" + req.params.sobaId);
 							client.close();
 						})
 						.catch(error => {
 							console.error(error);
+							var url = `/luci/ugasni/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("ERROR", url, "error reading from db", correlation);
 							res.status(400).send(false);
 							client.close();
 						});
 				});
 			}
-			else{
+			else {
 				console.log("token not ok");
+				var url = `/luci/ugasni/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token not ok", correlation);
 				res.status(400).send(false);
 			}
 		}).
-		catch(error => {
-			console.log("token error");
-			res.status(400).send(false);
-		});
+			catch(error => {
+				console.log("token error");
+				var url = `/luci/ugasni/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token error", correlation);
+				res.status(400).send(false);
+			});
 	}
-	else{
+	else {
+		var url = `/luci/ugasni/${req.params.lucId}/${req.params.sobaId}`;
+		var correlation = uuidv4();
+		log("ERROR", url, "no headers preset in request", correlation);
 		res.status(400).send(false);
 	}
-	
-	
-	
+
+
+
 });
 //vklopi sledenje urniku
 app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
@@ -346,10 +401,10 @@ app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki ji želimo vklopiti sledenje urniku'
 		}
 	*/
-	
-	if(req.headers.authorization){
-		
-		fetch('http://172.17.0.76:8081/verificirajZeton', {
+
+	if (req.headers.authorization) {
+
+		fetch(storitev_uporabniki+'/verificirajZeton', {
 			method: 'get',
 			headers: { 'Authorization': req.headers.authorization }
 		}).then(function (response) {
@@ -367,30 +422,45 @@ app.get('/luci/slediurniku/:sobaId/:lucId', (req, res) => {
 						{ $set: { "luci.$.slediUrniku": true } }
 					)
 						.then(result => {
-							posljiSporocilo("Luč z id "+req.params.lucId+" sledi urniku", req.headers.authorization, req.query.id);
+							posljiSporocilo("Luč z id " + req.params.lucId + " sledi urniku", req.headers.authorization, req.query.id);
+							var url = `/luci/slediurniku/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("INFO", url, "sledenje urniku vklopljeno", correlation);
 							res.status(200);
 							res.redirect("/luci/" + req.params.sobaId);
 							client.close();
 						})
 						.catch(error => {
 							console.error(error);
-							res.status(400).send(false);
+							var url = `/luci/slediurniku/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("ERROR", url, "error reading from db", correlation);
 							client.close();
 						});
 				});
 			}
-			else{
+			else {
 				console.log("token not ok");
+				var url = `/luci/slediurniku/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token not ok", correlation);
 				res.status(400).send(false);
 			}
 		}).
-		catch(error => {
-			console.log("token error");
-			res.status(400).send(false);
-		});
+			catch(error => {
+				console.log("token error");
+				var url = `/luci/slediurniku/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token error",correlation);
+				res.status(400).send(false);
+			});
 	}
-	else{
+	else {
+		var url = `/luci/slediurniku/${req.params.lucId}/${req.params.sobaId}`;
+		var correlation = uuidv4();
+		log("ERROR", url, "no headers preset in request", correlation);
 		res.status(400).send(false);
+
 	}
 });
 //izklopi sledenje urniku
@@ -406,10 +476,10 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 		  description: 'Id luči, ki ji želimo izklopiti sledenje urniku'
 		}
 	*/
-	
-	if(req.headers.authorization){
-		
-		fetch('http://172.17.0.76:8081/verificirajZeton', {
+
+	if (req.headers.authorization) {
+
+		fetch(storitev_uporabniki+'/verificirajZeton', {
 			method: 'get',
 			headers: { 'Authorization': req.headers.authorization }
 		}).then(function (response) {
@@ -417,43 +487,58 @@ app.get('/luci/neslediurniku/:sobaId/:lucId', (req, res) => {
 		}).then(function (data) {
 			if (data.status == 'OK') {
 				res.setHeader('Content-Type', 'application/json');
-			const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-			client.connect(err => {
-			if (err) return console.error(err)
-			const collection = client.db("udobjedoma").collection("luci");
-			const luc = collection.updateOne(
-				{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
-				{ $set: { "luci.$.slediUrniku": false } }
-			)
-				.then(result => {
-					console.log("ne sledi");
-					posljiSporocilo("Luč z id "+req.params.lucId+" ne sledi urniku", req.headers.authorization, req.query.id);
-					res.status(200);
-					res.redirect("/luci/" + req.params.sobaId);
-					client.close();
-				})
-				.catch(error => {
-					console.error(error);
-					res.status(400).send(false);
-					client.close();
+				const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+				client.connect(err => {
+					if (err) return console.error(err)
+					const collection = client.db("udobjedoma").collection("luci");
+					const luc = collection.updateOne(
+						{ _id: ObjectId(req.params.sobaId), "luci.lucId": ObjectId(req.params.lucId) },
+						{ $set: { "luci.$.slediUrniku": false } }
+					)
+						.then(result => {
+							console.log("ne sledi");
+							console.log("ID: "+req.query.id);
+							posljiSporocilo("Luč z id " + req.params.lucId + " ne sledi urniku", req.headers.authorization, req.query.id);
+							var url = `/luci/neslediurniku/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("INFO", url, "sledenje urniku izklopljeno", correlation);
+							res.status(200);
+							res.redirect("/luci/" + req.params.sobaId);
+							client.close();
+						})
+						.catch(error => {
+							console.error(error);
+							var url = `/luci/neslediurniku/${req.params.lucId}/${req.params.sobaId}`;
+							var correlation = uuidv4();
+							log("ERROR", url, "error reading from database", correlation);
+							res.status(400).send(false);
+							client.close();
+						});
 				});
-			});
 			}
-			else{
+			else {
 				console.log("token not ok");
+				var url = `/luci/neslediurniku/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				log("ERROR", url, "token not ok", correlation);
 				res.status(400).send(false);
 			}
 		}).
-		catch(error => {
-			console.log("token error");
-			res.status(400).send(false);
-		});
-		
-		
-		
-		
+			catch(error => {
+				console.log("token error");
+				var url = `/luci/neslediurniku/${req.params.lucId}/${req.params.sobaId}`;
+				var correlation = uuidv4();
+				console.log(correlation);
+				log("ERROR", url, "there has been an error retrieving the verification token", correlation);
+				res.status(400).send(false);
+			});
+
 	}
-	else{
+	else {
+		console.log("no headers present");
+		var url = `/luci/neslediurniku/${req.params.lucId}/${req.params.sobaId}`;
+		var correlation = uuidv4();
+		log("ERROR", url, "no headers preset in request", correlation);
 		res.status(400).send(false);
 	}
 });
@@ -461,30 +546,52 @@ function posljiSporocilo(text, auth, id) {
 	console.log("ext service");
 	var obvestilo = {
 		userId: [],
-		  showDateTime: new Date(),
-		  wasShown: false,
-		  text: text,
-		  extService: "Pametne luči"
+		showDateTime: new Date(),
+		wasShown: false,
+		text: text,
+		extService: "Pametne luči"
 	};
 	obvestilo.userId.push(id);
-	fetch("http://172.17.0.88:3000/notification", {
+	fetch("http://172.17.0.52:3000/notification", {
 		method: 'post',
 		body: JSON.stringify(obvestilo),
-		headers: { 
+		headers: {
 			'Content-Type': 'application/json',
 			'Authorization': auth
 		}
-		}	
+	}
 	)
-	.then(function (response) {
-		console.log("ext service uspeh");
-		console.log(response);
-		return response.json();
-	}).then(function (data) {
-		console.log("ext service uspeh");
-		console.log(data);
-	})
-	.catch(error => {console.log("ext service napaka"); console.log(error)})
+		.then(function (response) {
+			console.log("ext service uspeh");
+			console.log(response);
+			return response.json();
+		}).then(function (data) {
+			console.log("ext service uspeh");
+			console.log(data);
+		})
+		.catch(error => { console.log("ext service napaka"); console.log(error) })
+}
+
+async function log(type, url, message, correlation) {
+	var amql_url = util.format("amqp://%s:%s@%s:%s/%s", rabbit_user, rabbit_pwd, rabbit_host, rabbit_port, vhost);
+
+	console.log("Publishing");
+	var conn = await amqplib.connect(amql_url, "heartbeat=60");
+	var ch = await conn.createChannel()
+	var exch = 'IRR-1';
+	var q = 'IRR-1-logs';
+	var rkey = '';
+	await ch.assertExchange(exch, 'direct', { durable: true }).catch(console.error);
+	await ch.assertQueue(q, { durable: true });
+	await ch.bindQueue(q, exch);
+
+	var date = new Date();
+	var msg = date.toISOString() + ' ' + type + ' ' + url + ' Correlation: ' + correlation + ' - <* ' + message + ' *>';
+	await ch.publish(exch, rkey, Buffer.from(msg));
+	setTimeout(function () {
+		ch.close();
+		conn.close();
+	}, 500);
 }
 
 app.listen(port, () => {
